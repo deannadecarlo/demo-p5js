@@ -1,7 +1,7 @@
 // Adapted from https://p5js.org/examples/interaction-snake-game.html
 //
 var host = "localhost:4444";
-$(document).ready(function() {
+$(document).ready(function () {
   frames.start();
   twod.start();
 });
@@ -9,7 +9,7 @@ $(document).ready(function() {
 var frames = {
   socket: null,
 
-  start: function() {
+  start: function () {
     var url = "ws://" + host + "/frames";
     frames.socket = new WebSocket(url);
     frames.socket.onmessage = function (event) {
@@ -17,7 +17,7 @@ var frames = {
       if (command !== null) {
         sendWristCommand(command);
       }
-    }
+    };
   },
 
   get_left_wrist_command: function (frame) {
@@ -52,27 +52,27 @@ var frames = {
       }
     }
     return command;
-  }
+  },
 };
 
 var twod = {
   socket: null,
 
-  start: function() {
+  start: function () {
     var url = "ws://" + host + "/twod";
     twod.socket = new WebSocket(url);
-    twod.socket.onmessage = function(event) {
+    twod.socket.onmessage = function (event) {
       twod.show(JSON.parse(event.data));
-    }
+    };
   },
 
-  show: function(twod) {
-    $('.twod').attr("src", 'data:image/pnjpegg;base64,'+twod.src);
-  }
+  show: function (twod) {
+    $(".twod").attr("src", "data:image/pnjpegg;base64," + twod.src);
+  },
 };
 // the snake is divided into small segments, which are drawn and edited on each 'draw' call
 let numSegments = 10;
-let direction = 'right';
+let direction = "right";
 
 const xStart = 0; //starting x coordinate for snake
 const yStart = 250; //starting y coordinate for snake
@@ -84,30 +84,30 @@ let yCor = [];
 let xFruit = 0;
 let yFruit = 0;
 let scoreElem;
-let scoreContainer = document.getElementById('score-container');
-let handContainer = document.getElementById('hand-container');
+let scoreContainer = document.getElementById("score-container");
+let handContainer = document.getElementById("hand-container");
 
-let leftArrow = document.getElementById('left-arrow');
-let rightArrow = document.getElementById('right-arrow');
-let upArrow = document.getElementById('up-arrow');
-let downArrow = document.getElementById('down-arrow');
+let leftArrow = document.getElementById("left-arrow");
+let rightArrow = document.getElementById("right-arrow");
+let upArrow = document.getElementById("up-arrow");
+let downArrow = document.getElementById("down-arrow");
 
-let startButton = document.getElementById('start-button');
+let startButton = document.getElementById("start-button");
 startButton.addEventListener("click", () => {
   window.location.reload();
 });
 
 function setup() {
-  let snakeCanvas = createCanvas(windowWidth/2, windowHeight/2);
+  let snakeCanvas = createCanvas(windowWidth / 2, windowHeight / 2);
   snakeCanvas.parent("canvas-container");
   frameRate(3);
   stroke(255);
   strokeWeight(10);
   updateFruitCoordinates();
 
-  scoreElem = createDiv('Score = 0');
+  scoreElem = createDiv("Score = 0");
   scoreElem.parent("score-container");
-  scoreElem.id = 'score';
+  scoreElem.id = "score";
 
   for (let i = 0; i < numSegments; i++) {
     xCor.push(xStart + i * diff);
@@ -116,10 +116,10 @@ function setup() {
 }
 
 function draw() {
-  background('#b1d1fc');
+  background("#b1d1fc");
   for (let i = 0; i < numSegments - 1; i++) {
     line(xCor[i], yCor[i], xCor[i + 1], yCor[i + 1]);
-    stroke('#c1f80a');
+    stroke("black");
   }
   updateSnakeCoordinates();
   updateHandContainer();
@@ -144,19 +144,19 @@ function updateSnakeCoordinates() {
     yCor[i] = yCor[i + 1];
   }
   switch (direction) {
-    case 'right':
+    case "right":
       xCor[numSegments - 1] = xCor[numSegments - 2] + diff;
       yCor[numSegments - 1] = yCor[numSegments - 2];
       break;
-    case 'up':
+    case "up":
       xCor[numSegments - 1] = xCor[numSegments - 2];
       yCor[numSegments - 1] = yCor[numSegments - 2] - diff;
       break;
-    case 'left':
+    case "left":
       xCor[numSegments - 1] = xCor[numSegments - 2] - diff;
       yCor[numSegments - 1] = yCor[numSegments - 2];
       break;
-    case 'down':
+    case "down":
       xCor[numSegments - 1] = xCor[numSegments - 2];
       yCor[numSegments - 1] = yCor[numSegments - 2] + diff;
       break;
@@ -165,23 +165,23 @@ function updateSnakeCoordinates() {
 
 function updateHandContainer() {
   // set all arrows to white
-  leftArrow.className = 'left-arrow';
-  upArrow.className = 'up-arrow';
-  rightArrow.className = 'right-arrow';
-  downArrow.className = 'down-arrow';
+  leftArrow.className = "left-arrow";
+  upArrow.className = "up-arrow";
+  rightArrow.className = "right-arrow";
+  downArrow.className = "down-arrow";
 
   switch (direction) {
-    case 'right':
-      rightArrow.className += ' active-right';
+    case "right":
+      rightArrow.className += " active-right";
       break;
-    case 'up':
-      upArrow.className += ' active-up';
+    case "up":
+      upArrow.className += " active-up";
       break;
-    case 'left':
-      leftArrow.className += ' active-left';
+    case "left":
+      leftArrow.className += " active-left";
       break;
-    case 'down':
-      downArrow.className += ' active-down';
+    case "down":
+      downArrow.className += " active-down";
       break;
   }
 }
@@ -201,7 +201,7 @@ function checkGameStatus() {
   ) {
     noLoop();
     const scoreVal = parseInt(scoreElem.html().substring(8));
-    scoreElem.html('Game ended! Your score was : ' + scoreVal);
+    scoreElem.html("Game ended! Your score was : " + scoreVal);
   }
 }
 
@@ -228,7 +228,7 @@ function checkForFruit() {
   point(xFruit, yFruit);
   if (xCor[xCor.length - 1] === xFruit && yCor[yCor.length - 1] === yFruit) {
     const prevScore = parseInt(scoreElem.html().substring(8));
-    scoreElem.html('Score = ' + (prevScore + 1));
+    scoreElem.html("Score = " + (prevScore + 1));
     xCor.unshift(xCor[0]);
     yCor.unshift(yCor[0]);
     numSegments++;
@@ -250,26 +250,25 @@ function updateFruitCoordinates() {
 function sendWristCommand(command) {
   switch (command) {
     case 74:
-      if (direction !== 'right') {
-        direction = 'left';
+      if (direction !== "right") {
+        direction = "left";
       }
       break;
     case 76:
-      if (direction !== 'left') {
-        direction = 'right';
+      if (direction !== "left") {
+        direction = "right";
       }
       break;
     case 73:
-      if (direction !== 'down') {
-        direction = 'up';
+      if (direction !== "down") {
+        direction = "up";
       }
       break;
     case 75:
-      if (direction !== 'up') {
-        direction = 'down';
+      if (direction !== "up") {
+        direction = "down";
       }
       break;
   }
   console.log(direction);
 }
-
